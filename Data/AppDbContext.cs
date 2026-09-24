@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using UrlShortener.Models;
 
 namespace UrlShortener.Data;
 
@@ -9,4 +10,6 @@ public class AppDbContext: DbContext
     ) : base(options)
     {
     }
+
+    public DbSet<Link> Links {get;set;} = null!;
 }

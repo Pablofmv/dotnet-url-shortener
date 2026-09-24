@@ -52,4 +52,3 @@ app.MapGet("/db/health", async(AppDbContext dbContext) => {
 
 app.Run();
 
-
