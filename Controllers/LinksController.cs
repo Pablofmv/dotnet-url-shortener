@@ -61,4 +61,34 @@ public class LinksController : ControllerBase
 
         return Redirect(link.DestinationUrl);
     }
+
+
+    [HttpGet("/analytics/unique-visitors")]
+    public async Task<IActionResult> GetUniqueVisitors()
+    {
+        var uniqueVisitors = await _dbContext.ClickEvents
+            .Select(click => click.IpAddress)
+            .Distinct()
+            .CountAsync();
+        
+        return Ok(new{
+            UniqueVisitors = uniqueVisitors
+        });
+    }
+
+    [HttpGet("/analytics/clicks-by-subdomain")]
+    public async Task<IActionResult> GetClicksBySubdomain()
+    {
+
+        var clicksBySubdomain = await _dbContext.ClickEvents
+            .GroupBy(click => click.Subdomain)
+            .Select(group => new {
+                Subdomain = group.Key,
+                TotalClicks = group.Count()
+            })
+            .ToListAsync();
+        
+        return Ok(clicksBySubdomain);
+
+    }
 }
