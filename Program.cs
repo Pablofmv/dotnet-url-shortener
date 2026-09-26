@@ -22,7 +22,8 @@ var app = builder.Build();
 
 app.MapControllers();
 
-app.MapGet("/", () => {
+app.MapGet("/api", () =>
+{
     return "URL Shortener API is running";
 });
 
@@ -49,6 +50,8 @@ app.MapGet("/db/health", async(AppDbContext dbContext) => {
     });
 
 });
+
+
 
 app.Run();
 
