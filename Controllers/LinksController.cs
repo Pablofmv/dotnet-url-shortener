@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UrlShortener.Data;
+using UrlShortener.Models;
 
 namespace UrlShortener.Controllers;
 
@@ -27,6 +28,36 @@ public class LinksController : ControllerBase
         {
             return NotFound();
         }
+
+        var clickedAt = DateTime.UtcNow;
+
+        var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
+
+        var referrer = Request.Headers["Referer"].ToString();
+
+        var userAgent = Request.Headers["User-Agent"].ToString();
+
+        var userAgentLower = userAgent.ToLower();
+
+        var isBot = userAgentLower.Contains("bot") || userAgentLower.Contains("crawler") || userAgentLower.Contains("spider");
+
+        var clickEvent = new ClickEvent
+        {
+            LinkId = link.Id,
+            Subdomain = subdomain,
+            ClickedAt = clickedAt,
+            IpAddress = ipAddress,
+            Referrer = referrer,
+            UserAgent = userAgent,
+            Country = "",
+            Region = "",
+            Organization = "",
+            IsBot = isBot
+        };
+
+        _dbContext.ClickEvents.Add(clickEvent);
+
+        await _dbContext.SaveChangesAsync();
 
         return Redirect(link.DestinationUrl);
     }

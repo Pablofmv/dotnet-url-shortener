@@ -12,4 +12,5 @@ public class AppDbContext: DbContext
     }
 
     public DbSet<Link> Links {get;set;} = null!;
+    public DbSet<ClickEvent> ClickEvents {get; set;} = null!;
 }
