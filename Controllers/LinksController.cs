@@ -9,10 +9,13 @@ namespace UrlShortener.Controllers;
 public class LinksController : ControllerBase
 {
     private readonly AppDbContext _dbContext;
+    private readonly ILogger<LinksController> _logger;
 
-    public LinksController(AppDbContext dbContext)
+    public LinksController(AppDbContext dbContext,
+                            ILogger<LinksController> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
     }
 
     [HttpGet("/")]
@@ -26,6 +29,11 @@ public class LinksController : ControllerBase
 
         if (link is null)
         {
+            _logger.LogWarning(
+                "Unkwnown subdomain {Subdomain}",
+                subdomain
+            );
+            
             return NotFound();
         }
 
@@ -57,7 +65,27 @@ public class LinksController : ControllerBase
 
         _dbContext.ClickEvents.Add(clickEvent);
 
-        await _dbContext.SaveChangesAsync();
+        try
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+        catch(Exception exception)
+        {
+            _logger.LogError(
+                exception,
+                "Failed to record click for subdomain {Subdomain}",
+                subdomain
+            );
+
+            throw;
+        }
+
+        _logger.LogInformation(
+            "Redirecting subdomain {Subdomain} to {DestinationUrl}",
+            subdomain,
+            link.DestinationUrl
+        );
+        
 
         return Redirect(link.DestinationUrl);
     }
@@ -91,4 +119,29 @@ public class LinksController : ControllerBase
         return Ok(clicksBySubdomain);
 
     }
+
+
+    [HttpGet("/analytics/unique-visitors-last-5-days")]
+    public async Task<IActionResult> GetUniqueVisitorsLast5days()
+    {
+        var today = DateTime.UtcNow.Date;
+
+        var startDate = today.AddDays(-4);
+
+        var uniqueVisitorsByDay = await _dbContext.ClickEvents
+            .Where(click => click.ClickedAt >= startDate)
+            .GroupBy(click => click.ClickedAt.Date)
+            .Select(group => new {
+                Day = group.Key,
+                UniqueVisitors = group
+                    .Select(click =>click.IpAddress)
+                    .Distinct()
+                    .Count()
+            })
+            .OrderBy(result => result.Day)
+            .ToListAsync();
+        
+        return Ok(uniqueVisitorsByDay);
+    }
+
 }
