@@ -5,6 +5,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+
+builder.Services.AddCors( options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 if (string.IsNullOrWhiteSpace(connectionString))
@@ -19,6 +31,8 @@ builder.Services.AddDbContext<AppDbContext>(options => {
 });
 
 var app = builder.Build();
+
+app.UseCors("Frontend");
 
 app.MapControllers();
 
