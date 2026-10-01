@@ -17,6 +17,10 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Link>()
+            .HasIndex(link => link.Subdomain)
+            .IsUnique();
+
         modelBuilder.Entity<ClickEvent>()
             .HasOne<Link>()
             .WithMany()
