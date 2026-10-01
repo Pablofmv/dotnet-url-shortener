@@ -5,8 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-
-builder.Services.AddCors( options =>
+builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
     {
@@ -17,7 +16,8 @@ builder.Services.AddCors( options =>
     });
 });
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString =
+    builder.Configuration.GetConnectionString("DefaultConnection");
 
 if (string.IsNullOrWhiteSpace(connectionString))
 {
@@ -26,11 +26,20 @@ if (string.IsNullOrWhiteSpace(connectionString))
     );
 }
 
-builder.Services.AddDbContext<AppDbContext>(options => {
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
     options.UseNpgsql(connectionString);
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext =
+        scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    await dbContext.Database.MigrateAsync();
+}
 
 app.UseCors("Frontend");
 
@@ -41,31 +50,28 @@ app.MapGet("/api", () =>
     return "URL Shortener API is running";
 });
 
-app.MapGet("/health", () =>{
-    return Results.Ok(
-        new {
-            Status = "Healthy"
-        }
-    );
+app.MapGet("/health", () =>
+{
+    return Results.Ok(new
+    {
+        Status = "Healthy"
+    });
 });
 
+app.MapGet("/db/health", async (AppDbContext dbContext) =>
+{
+    var canConnect =
+        await dbContext.Database.CanConnectAsync();
 
-app.MapGet("/db/health", async(AppDbContext dbContext) => {
-
-    var canConnet = await dbContext.Database.CanConnectAsync();
-
-    if(!canConnet)
+    if (!canConnect)
     {
         return Results.Problem("Database connection failed.");
     }
 
-    return Results.Ok(new {
+    return Results.Ok(new
+    {
         Database = "Connected"
     });
-
 });
 
-
-
 app.Run();
-
