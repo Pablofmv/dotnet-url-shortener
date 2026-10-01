@@ -1,108 +1,204 @@
 .dashboard {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 24px;
-    font-family: Arial, sans-serif;
-    color: black;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 20px 32px 80px;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+
+  color: #111;
+  background: #fff;
+}
+
+.dashboard-title {
+  margin: 0 0 64px;
+
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+
+  text-align: center;
+}
+
+/* TOP SECTION */
+
+.dashboard-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+
+  margin-bottom: 72px;
+}
+
+.subdomains-panel,
+.unique-visitors-panel {
+  border-radius: 16px;
+  padding: 28px 32px;
+}
+
+.subdomains-panel {
+  background: #f5f5f4;
+}
+
+.unique-visitors-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff3b0;
+  text-align: center;
+}
+
+.subdomains-panel h2,
+.unique-visitors-panel h2,
+.last-five-days h2 {
+  margin: 0 0 28px;
+
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.subdomain-item {
+  margin-bottom: 26px;
+}
+
+.subdomain-item:last-child {
+  margin-bottom: 0;
+}
+
+.subdomain-item h3 {
+  margin: 0 0 4px;
+
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.subdomain-item p {
+  margin: 0;
+
+  color: #52525b;
+
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.unique-visitors-panel p {
+  margin: 0;
+
+  font-size: 4.5rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+/* LAST 5 DAYS */
+
+.last-five-days {
+  padding: 0;
+}
+
+.last-five-days h2 {
+  margin-bottom: 28px;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+
+  overflow: hidden;
+
+  border: 1px solid #e4e4e7;
+  border-radius: 16px;
+
+  background: #fff;
+}
+
+.days-grid div {
+  padding: 18px 12px;
+
+  color: #52525b;
+
+  font-size: 1rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.days-grid div:nth-child(-n + 5) {
+  background: #f5f5f4;
+
+  color: #18181b;
+
+  font-weight: 700;
+
+  border-bottom: 1px solid #e4e4e7;
+}
+
+.days-grid div:not(:nth-child(5n)) {
+  border-right: 1px solid #e4e4e7;
+}
+
+/* MOBILE */
+
+@media (max-width: 767px) {
+  .dashboard {
+    padding: 20px 24px 72px;
   }
-  
+
   .dashboard-title {
-    margin: 0 0 56px;
-    text-align: center;
-    font-size: 64px;
-    font-weight: 800;
+    margin-bottom: 48px;
+
+    font-size: 2.5rem;
+    text-align: left;
   }
-  
+
   .dashboard-top {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    margin-bottom: 36px;
+    grid-template-columns: 1fr;
+    gap: 24px;
+
+    margin-bottom: 56px;
   }
-  
-  .subdomains-panel {
-    background: #d3d3d3;
-    padding: 32px;
-    text-align: center;
+
+  .subdomains-panel,
+  .unique-visitors-panel {
+    padding: 24px;
   }
-  
+
   .subdomains-panel h2,
   .unique-visitors-panel h2,
   .last-five-days h2 {
-    margin-top: 0;
-    font-size: 40px;
+    font-size: 1.75rem;
   }
-  
-  .subdomain-item h3 {
-    margin-bottom: 4px;
-    font-size: 28px;
-  }
-  
-  .subdomain-item p {
-    margin-top: 0;
-    margin-bottom: 12px;
-    font-size: 40px;
-    font-weight: 700;
-    color: white;
-  }
-  
+
   .unique-visitors-panel {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f5ff70;
-    padding: 32px;
-    text-align: center;
+    justify-content: flex-start;
+    text-align: left;
   }
-  
+
   .unique-visitors-panel p {
-    margin: 20px 0 0;
-    font-size: 120px;
-    font-weight: 800;
+    font-size: 3.75rem;
   }
-  
-  .last-five-days {
-    border: 5px solid black;
-    padding: 28px 20px 60px;
-    text-align: center;
-  }
-  
-  .last-five-days h2 {
-    margin-bottom: 50px;
-  }
-  
+
   .days-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
+    grid-template-columns: 1fr;
   }
-  
+
   .days-grid div {
-    background: #d3d3d3;
-    padding: 14px;
-    font-size: 24px;
+    text-align: left;
+
+    border-right: 0 !important;
+    border-bottom: 1px solid #e4e4e7;
   }
-  
-  @media (max-width: 700px) {
-    .dashboard-title {
-      font-size: 42px;
-    }
-  
-    .dashboard-top {
-      grid-template-columns: 1fr;
-    }
-  
-    .subdomains-panel h2,
-    .unique-visitors-panel h2,
-    .last-five-days h2 {
-      font-size: 30px;
-    }
-  
-    .unique-visitors-panel p {
-      font-size: 80px;
-    }
-  
-    .days-grid {
-      grid-template-columns: 1fr;
-    }
+
+  .days-grid div:last-child {
+    border-bottom: 0;
   }
+}
