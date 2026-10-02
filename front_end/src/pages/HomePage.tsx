@@ -15,7 +15,7 @@ function HomePage() {
             <div className="intro__card">
               <p className="intro__text">
                 <span className="intro__symbol">&gt;</span>
-                🦀 Rust and 🐍 Python developer
+                Software Engineer
               </p>
             </div>
           </div>
@@ -25,11 +25,11 @@ function HomePage() {
           <div className="summary">
             <div className="summary__content">
               <h2 className="title-lg">
-                Tech Professional interested
+                Tech Professional
                 <br />
-                in System Design and
+                Full Stack
                 <br />
-                Coding
+                .NET + React
               </h2>
 
               <div className="summary__meta">
