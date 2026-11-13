@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UrlShortener.Data;
@@ -39,7 +40,13 @@ public class LinksController : ControllerBase
 
         var clickedAt = DateTime.UtcNow;
 
-        var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
+        var forwardedIp = Request.Headers["X-Envoy-External-Address"].ToString();
+
+        var ipAddress = IPAddress.TryParse(forwardedIp, out var parsedIp)
+            ? (parsedIp.IsIPv4MappedToIPv6
+                ? parsedIp.MapToIPv4().ToString()
+                : parsedIp.ToString())
+            : HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
 
         var referrer = Request.Headers["Referer"].ToString();
 
